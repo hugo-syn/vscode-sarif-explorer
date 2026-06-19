@@ -70,10 +70,27 @@ export class ResultsTableFilters {
             return true;
         }
 
-        const resPath = result.getResultNormalizedPath();
+        const pathsToCheck: string[] = [result.getResultNormalizedPath()];
+        
+        for (const loc of result.getLocations()) {
+            if (loc.path) {
+                pathsToCheck.push(loc.path);
+            }
+        }
+
+        for (const related of result.getRelatedLocations().values()) {
+            if (related.location && related.location.path) {
+                pathsToCheck.push(related.location.path);
+            }
+        }
+
         for (const p of this.includePathsAsSet) {
-            if (resPath.includes(p)) {
-                return true;
+            const searchPattern = p.toLowerCase();
+            
+            for (const path of pathsToCheck) {
+                if (path.toLowerCase().includes(searchPattern)) {
+                    return true;
+                }
             }
         }
         return false;
