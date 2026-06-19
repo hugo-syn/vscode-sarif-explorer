@@ -65,22 +65,30 @@ export class ResultsTableFilters {
         );
     }
 
-    public filterByIncludePath(result: Result): boolean {
+public filterByIncludePath(result: Result): boolean {
         if (this.includePathsAsSet.size === 0) {
             return true;
         }
 
-        const pathsToCheck: string[] = [result.getResultNormalizedPath()];
+        const pathsToCheck: Set<string> = new Set();
+        
+        pathsToCheck.add(result.getResultNormalizedPath());
         
         for (const loc of result.getLocations()) {
             if (loc.path) {
-                pathsToCheck.push(loc.path);
+                pathsToCheck.add(loc.path);
             }
         }
 
         for (const related of result.getRelatedLocations().values()) {
             if (related.location && related.location.path) {
-                pathsToCheck.push(related.location.path);
+                pathsToCheck.add(related.location.path);
+            }
+        }
+
+        for (const df of result.getDataFlow()) {
+            if (df.location && df.location.path) {
+                pathsToCheck.add(df.location.path);
             }
         }
 
