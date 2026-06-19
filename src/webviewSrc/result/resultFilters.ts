@@ -75,8 +75,6 @@ export class ResultsTableFilters {
 
         const baseFolder = result.getAssociatedSarifFile().getResultsBaseFolder();
 
-        pathsToCheck.add(result.getResultNormalizedPath());
-
         for (const loc of result.getLocations()) {
             if (loc.path) {
                 pathsToCheck.add(normalizePath(loc.path, baseFolder));
